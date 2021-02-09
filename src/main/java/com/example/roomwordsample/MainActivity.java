@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -17,7 +17,9 @@ public class MainActivity extends AppCompatActivity {
     private WordViewModel mWordViewModel;
     public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
 
-//    ImageView deleteImageView = findViewById(R.id.imageView);
+    public void undoLastEntry(View view){
+        mWordViewModel.undoLastEntry();
+    }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -57,6 +59,15 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(intent, NEW_WORD_ACTIVITY_REQUEST_CODE);
         });
 
+        Button undoButton = findViewById(R.id.undoButton);
+        undoButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        mWordViewModel.undoLastEntry();
+                    }}
+        );
 
     }
 }

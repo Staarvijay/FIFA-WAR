@@ -20,8 +20,11 @@ public interface WordDao {
     @Query("DELETE FROM word_table_new")
     void deleteAll();
 
-//    @Query("DELETE FROM word_table_new ORDER BY id DESC LIMIT 1")
-//    void deletenode(Word word);
+    @Query("DELETE FROM word_table_new WHERE id = (SELECT MAX(id) FROM word_table_new)")
+    void undoLastEntry();
+
+//    @Query("DELETE FROM word_table_new WHERE id = (SELECT MAX(id) FROM word_table_new)")
+//    void undofun();
 
     @Query("SELECT * FROM word_table_new ORDER BY ankur ASC")
     LiveData<List<Word>> getAlphabetizedWords();

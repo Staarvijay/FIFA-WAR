@@ -34,6 +34,12 @@ class WordRepository {
             mWordDao.insert(word);
         });
     }
+
+    public void undoLastEntry() {
+        WordRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mWordDao.undoLastEntry();
+        });
+    }
 //    void delete(Word word) {
 //        WordRoomDatabase.databaseWriteExecutor.execute(() -> {
 //            mWordDao.deletenode(word);
