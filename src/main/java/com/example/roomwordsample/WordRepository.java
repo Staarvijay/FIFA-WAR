@@ -16,7 +16,6 @@ class WordRepository {
 
     private WordDao mWordDao;
     private LiveData<List<Word>> mAllWords;
-    private LiveData<List<Word>> nAllWords;
 
     // Note that in order to unit test the WordRepository, you have to remove the Application
     // dependency. This adds complexity and much more code, and this sample is not about testing.
@@ -27,7 +26,7 @@ class WordRepository {
         mWordDao = db.wordDao();
         mAllWords = mWordDao.getAllWordsInNormalOrder();
 
-        nAllWords = mWordDao.isEntityEmptyOrNot();
+
     }
 
     // Room executes all queries on a separate thread.
@@ -48,17 +47,6 @@ class WordRepository {
         WordRoomDatabase.databaseWriteExecutor.execute(() -> {
             mWordDao.undoLastEntry();
         });
-    }
-
-//    LiveData<List<Word>> listofword = nAllWords;
-    public boolean isEntityEmptyOrNot(LiveData<List<Word>> listofword){
-        if(listofword.getValue() == null){
-            Log.i("info","this is wordrepo jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
-            return true;
-        }
-        else{
-            return false;
-        }
     }
 
 }

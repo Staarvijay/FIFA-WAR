@@ -28,13 +28,5 @@ public class WordViewModel extends AndroidViewModel {
         mRepository.undoLastEntry();
     }
 
-    public boolean isEntityEmptyOrNot(){
-        if(mRepository.isEntityEmptyOrNot(mAllWords) == true){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
 
 }

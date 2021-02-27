@@ -18,10 +18,6 @@ public class MainActivity extends AppCompatActivity {
     private WordViewModel mWordViewModel;
     public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
 
-    public void undoLastEntry(View view){
-        mWordViewModel.undoLastEntry();
-    }
-
     Button undoButton;
 
     int ankurRedoData = 0;
@@ -80,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
 
-                        //mWordViewModel.undoLastEntry();
                         new AlertDialog.Builder(MainActivity.this)
                                 .setIcon(android.R.drawable.ic_dialog_alert)
                                 .setTitle("Are you sure wanna UNDO?")
@@ -97,9 +92,6 @@ public class MainActivity extends AppCompatActivity {
                                             }
                                         }, 7000);
 
-                                        if(mWordViewModel.isEntityEmptyOrNot() == true){
-                                            undoButton.setVisibility(View.INVISIBLE);
-                                        }
                                     }
                                 })
                                 .setNegativeButton("No",null)
