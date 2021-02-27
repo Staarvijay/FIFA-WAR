@@ -1,10 +1,16 @@
 package com.example.roomwordsample;
 
 import android.app.Application;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
+import androidx.room.DatabaseConfiguration;
+import androidx.room.InvalidationTracker;
+import androidx.sqlite.db.SupportSQLiteOpenHelper;
 
 class WordRepository {
 
@@ -19,6 +25,8 @@ class WordRepository {
         WordRoomDatabase db = WordRoomDatabase.getDatabase(application);
         mWordDao = db.wordDao();
         mAllWords = mWordDao.getAllWordsInNormalOrder();
+
+
     }
 
     // Room executes all queries on a separate thread.
@@ -34,9 +42,11 @@ class WordRepository {
             mWordDao.insert(word);
         });
     }
-//    void delete(Word word) {
-//        WordRoomDatabase.databaseWriteExecutor.execute(() -> {
-//            mWordDao.deletenode(word);
-//        });
-//    }
+
+    public void undoLastEntry() {
+        WordRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mWordDao.undoLastEntry();
+        });
+    }
+
 }
