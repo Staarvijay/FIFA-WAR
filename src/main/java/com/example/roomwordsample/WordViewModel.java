@@ -13,6 +13,7 @@ public class WordViewModel extends AndroidViewModel {
 
     private final LiveData<List<Word>> mAllWords;
 
+
     public WordViewModel (Application application) {
         super(application);
         mRepository = new WordRepository(application);
@@ -27,5 +28,13 @@ public class WordViewModel extends AndroidViewModel {
         mRepository.undoLastEntry();
     }
 
-//    public void delete(Word word) {mRepository.delete(word);}
+    public boolean isEntityEmptyOrNot(){
+        if(mRepository.isEntityEmptyOrNot(mAllWords) == true){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
 }

@@ -1,15 +1,22 @@
 package com.example.roomwordsample;
 
 import android.app.Application;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
+import androidx.room.DatabaseConfiguration;
+import androidx.room.InvalidationTracker;
+import androidx.sqlite.db.SupportSQLiteOpenHelper;
 
 class WordRepository {
 
     private WordDao mWordDao;
     private LiveData<List<Word>> mAllWords;
+    private LiveData<List<Word>> nAllWords;
 
     // Note that in order to unit test the WordRepository, you have to remove the Application
     // dependency. This adds complexity and much more code, and this sample is not about testing.
@@ -19,6 +26,8 @@ class WordRepository {
         WordRoomDatabase db = WordRoomDatabase.getDatabase(application);
         mWordDao = db.wordDao();
         mAllWords = mWordDao.getAllWordsInNormalOrder();
+
+        nAllWords = mWordDao.isEntityEmptyOrNot();
     }
 
     // Room executes all queries on a separate thread.
@@ -40,9 +49,16 @@ class WordRepository {
             mWordDao.undoLastEntry();
         });
     }
-//    void delete(Word word) {
-//        WordRoomDatabase.databaseWriteExecutor.execute(() -> {
-//            mWordDao.deletenode(word);
-//        });
-//    }
+
+//    LiveData<List<Word>> listofword = nAllWords;
+    public boolean isEntityEmptyOrNot(LiveData<List<Word>> listofword){
+        if(listofword.getValue() == null){
+            Log.i("info","this is wordrepo jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
 }

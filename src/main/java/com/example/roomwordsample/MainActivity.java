@@ -1,10 +1,11 @@
 package com.example.roomwordsample;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -21,12 +22,20 @@ public class MainActivity extends AppCompatActivity {
         mWordViewModel.undoLastEntry();
     }
 
+    Button undoButton;
+
+    int ankurRedoData = 0;
+    int ankitRedoData = 0;
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            ankurRedoData = data.getIntExtra(NewWordActivity.EXTRA_REPLY_ANKUR, 0);
+            ankitRedoData = data.getIntExtra(NewWordActivity.EXTRA_REPLY_ANKIT, 0);
             Word word = new Word(data.getIntExtra(NewWordActivity.EXTRA_REPLY_ANKUR, 0), data.getIntExtra(NewWordActivity.EXTRA_REPLY_ANKIT, 0));
             mWordViewModel.insert(word);
+            undoButton.setVisibility(View.VISIBLE);
 
 
         } else {
@@ -41,6 +50,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Button redoButton = findViewById(R.id.redoButton);
+        redoButton.setVisibility(View.INVISIBLE);
+
+
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
         final WordListAdapter adapter = new WordListAdapter(new WordListAdapter.WordDiff());
         recyclerView.setAdapter(adapter);
@@ -59,13 +73,50 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(intent, NEW_WORD_ACTIVITY_REQUEST_CODE);
         });
 
-        Button undoButton = findViewById(R.id.undoButton);
+        undoButton = findViewById(R.id.undoButton);
+        undoButton.setVisibility(View.INVISIBLE);
         undoButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        mWordViewModel.undoLastEntry();
+                        //mWordViewModel.undoLastEntry();
+                        new AlertDialog.Builder(MainActivity.this)
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .setTitle("Are you sure wanna UNDO?")
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                                        mWordViewModel.undoLastEntry();
+
+                                        redoButton.setVisibility(View.VISIBLE);
+                                        redoButton.postDelayed(new Runnable() {
+                                            public void run() {
+                                                redoButton.setVisibility(View.INVISIBLE);
+                                            }
+                                        }, 7000);
+
+                                        if(mWordViewModel.isEntityEmptyOrNot() == true){
+                                            undoButton.setVisibility(View.INVISIBLE);
+                                        }
+                                    }
+                                })
+                                .setNegativeButton("No",null)
+                                .show();
+                    }}
+        );
+
+
+        redoButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Word word = new Word(ankurRedoData, ankitRedoData);
+                        mWordViewModel.insert(word);
+                        redoButton.setVisibility(View.INVISIBLE);
+
                     }}
         );
 
